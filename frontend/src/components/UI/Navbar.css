@@ -1,5 +1,5 @@
 #navbar{
-    background-color: #e45353;
+    background-color: dodgerblue;
 
 }
 
@@ -9,4 +9,8 @@
 
 .navbar-item:hover{
     color: red;
+}
+
+.nav-link{
+    color: white;
 }

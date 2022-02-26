@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import axios from 'axios'
 import { useEffect } from 'react'
+import { collection, getDocs } from "firebase/firestore";
+import { db } from '../Firestore';
 import { Link } from 'react-router-dom';
 
 function SavingsGroup() {
@@ -21,7 +23,23 @@ function SavingsGroup() {
         window.location = '/'
     }
 
-    const getData = () => {
+    const getData = async () => {
+
+             //fetch data from google firebase firestore
+             const querySnapshot = await getDocs(collection(db, "savingsGroups"));
+             querySnapshot.forEach((doc) => {
+                 const data = doc.data()
+                 //console.log(JSON.stringify(data))
+                 //console.log('groups are',data)
+              
+                 setGroup((prevState) => {
+                     return [...prevState, data];
+                   });
+             });
+
+             
+             return
+
         axios.get(`http://localhost:4000/group`)
             .then(res => {
                 const group = res.data;
@@ -32,13 +50,14 @@ function SavingsGroup() {
     useEffect(() => {
         getData()
     }, [])
+
     return (
         <div>
             <h3>Savings Groups</h3>
             {group?
             <ul>
                 {group.map(group => (
-                    <p><Link to={"/group/" + group.groupName}>{group.groupName}</Link></p>
+                    <p><Link to={"/group/" + group.Name}>{group.Name}</Link></p>
                 ))}
             </ul> : <p>No groups available yet</p>
                 

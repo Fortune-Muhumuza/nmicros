@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { collection, addDoc, getDocs } from "firebase/firestore";
+import { db } from '../Firestore';
 import axios from 'axios'
 
 function NewRecordForm(props) {
@@ -20,12 +22,29 @@ function NewRecordForm(props) {
     }
 
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
+        e.preventDefault()
+
         const enteredData = {
             accountName: person,
             moneySaved: money,
             groupName: enteredGroup,
         };
+
+
+        
+
+        try {
+            const docRef = await addDoc(collection(db, "users"), enteredData);
+          
+            console.log("Document written with ID: ", docRef.id);
+          } catch (e) {
+            console.error("Error adding document: ", e);
+          }
+
+        //window.location = '/'
+
+        return
 
         axios.post('http://localhost:4000/notes', enteredData)
             .then(response => {
@@ -38,7 +57,22 @@ function NewRecordForm(props) {
         window.location = '/'
     }
 
-    const getData = () => {
+    const getData = async () => {
+
+          //fetch data from google firebase firestore
+          const querySnapshot = await getDocs(collection(db, "savingsGroups"));
+          querySnapshot.forEach((doc) => {
+              const data = doc.data()
+              //console.log(JSON.stringify(data))
+              //console.log('groups are',data)
+           
+              setGroup((prevState) => {
+                  return [...prevState, data];
+                });
+          });
+
+          return
+
         axios.get(`http://localhost:4000/group`)
             .then(res => {
                 const group = res.data;
