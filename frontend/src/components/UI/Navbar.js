@@ -13,7 +13,7 @@ export default class Navbar extends Component {
                             <Link to='/' className='nav-link' > Full list</Link>
                         </li>
                         <li className="navbar-item">
-                            <Link to='/create' className='nav-link' > New record</Link>
+                            <Link to='/create' className='nav-link' > New deposit</Link>
                         </li>
                         {/* <li className="navbar-item">
                             <Link to='/singleRecord' className='nav-link' > Single record</Link>
