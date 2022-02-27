@@ -2,12 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from '../Firestore';
 import axios from 'axios'
+import { faker } from '@faker-js/faker';
 
 function NewRecordForm(props) {
     const [person, setPerson] = useState("")
     const [money, setMoney] = useState(0)
     const [group, setGroup] = useState([])
     const [enteredGroup, setEnteredGroup] = useState("")
+
+
+    const randomName = faker.name.findName();
+    const randomAmount = faker.finance.amount()
 
     function handleChange(e) {
         setPerson(e.target.value)
@@ -18,6 +23,7 @@ function NewRecordForm(props) {
     }
 
     function handleGroupChange(e) {
+        console.log(e.target.value)
         setEnteredGroup(e.target.value)
     }
 
@@ -25,22 +31,27 @@ function NewRecordForm(props) {
     async function handleSubmit(e) {
         e.preventDefault()
 
+        //if(!enteredGroup)
+
         const enteredData = {
-            accountName: person,
-            moneySaved: money,
-            groupName: enteredGroup,
+            accountName: randomName,
+            amountDeposited: randomAmount,
+            banker: 'Peter Mubiru',
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString()
         };
 
-
-        
-
         try {
-            const docRef = await addDoc(collection(db, "users"), enteredData);
-          
-            console.log("Document written with ID: ", docRef.id);
-          } catch (e) {
+           // const docRef = await addDoc(collection(db, "users"), enteredData);
+            const docRef = await addDoc(collection(db, "/transactions/deposits/deposits"), enteredData);
+            
+
+            console.log("Document saved to transactions: ", docRef.id);
+        } catch (e) {
             console.error("Error adding document: ", e);
-          }
+        }
+
+       
 
         //window.location = '/'
 
@@ -59,19 +70,19 @@ function NewRecordForm(props) {
 
     const getData = async () => {
 
-          //fetch data from google firebase firestore
-          const querySnapshot = await getDocs(collection(db, "savingsGroups"));
-          querySnapshot.forEach((doc) => {
-              const data = doc.data()
-              //console.log(JSON.stringify(data))
-              //console.log('groups are',data)
-           
-              setGroup((prevState) => {
-                  return [...prevState, data];
-                });
-          });
+        //fetch data from google firebase firestore
+        const querySnapshot = await getDocs(collection(db, "savingsGroups"));
+        querySnapshot.forEach((doc) => {
+            const data = doc.data()
+            //console.log(JSON.stringify(data))
+            console.log('groups are',data)
 
-          return
+            setGroup((prevState) => {
+                return [...prevState, data];
+            });
+        });
+
+        return
 
         axios.get(`http://localhost:4000/group`)
             .then(res => {
@@ -86,12 +97,11 @@ function NewRecordForm(props) {
     }, [])
 
 
-
     return (
         <div>
             <h1>New record</h1>
             <form onSubmit={handleSubmit} className='form-inline'>
-                <div >
+                {/* <div >
                     <label>Account name</label>
                     <input
                         type="text"
@@ -99,8 +109,8 @@ function NewRecordForm(props) {
                         value={person}
                         className='form-control'
                     />
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                     <label>Money saved</label>
                     <input
                         type="number"
@@ -108,8 +118,17 @@ function NewRecordForm(props) {
                         value={money}
                         className='form-control'
                     />
+                </div> */}
+                <div className="select-container">
+                    <select onChange={handleGroupChange} >
+                        <option label="Savings Group"></option>
+                        {group.map((option) => (
+                            <option value={option.value} >{option.savingsGroupName}</option>
+                        ))}
+                    </select>
                 </div>
-                <div>
+
+                {/* <div>
                     <label>Savings group</label>
                     <input
                         type="string"
@@ -117,16 +136,11 @@ function NewRecordForm(props) {
                         value={enteredGroup}
                         className='form-control'
                     />
-                </div>
+                </div> */}
 
                 <button type="submit" className="btn btn-primary">Add Record</button>
             </form>
-            <h4>Available groups</h4>
-            <ul>
-                {group.map(result => (
-                    <li key={result._id}>{result.groupName}</li>
-                ))}
-            </ul>
+
         </div>
     )
 
