@@ -14,6 +14,7 @@ import GroupInfo from './components/GroupInfo';
 import DeleteAccount from './components/DeleteAccount';
 import User from './User';
 import Signup from './components/auth/Signup';
+import Withdraw from './components/Transactions/Withdraw'
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
         <Route path='/signup' exact component={Signup} />
         <Route path='/signin' exact component={Signin} />
         <Route path='/user' exact component={User} />
+        <Route path='/withdraw' exact component={Withdraw} />
       </div>
     </Router>
   );
