@@ -27,6 +27,9 @@ export default class Navbar extends Component {
                         <li className="navbar-item">
                             <Link to='/transactionHistory' className='nav-link' > Transaction history</Link>
                         </li>
+                        <li className="navbar-item">
+                            <Link to='/dashboard' className='nav-link' >Dashboard</Link>
+                        </li>
 
                     </ul>
                 </div>

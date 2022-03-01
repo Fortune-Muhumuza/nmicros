@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css';
+import { io } from "socket.io-client";
 
 import Navbar from './components/UI/Navbar'
 import Signin from './components/auth/Signin'
@@ -15,10 +17,23 @@ import DeleteAccount from './components/DeleteAccount';
 import User from './User';
 import Signup from './components/auth/Signup';
 import Withdraw from './components/Transactions/Withdraw'
+import Dashboard from './components/Dashboard';
+
+const socket = io.connect('http://localhost:4000')
 
 function App() {
 
- 
+  const connectSocket = () => {
+    socket.emit('message', { message: 'user connected' })
+  }
+
+
+
+  useEffect(() => {
+    connectSocket()
+  }, [])
+
+
 
 
   return (
@@ -39,6 +54,7 @@ function App() {
         <Route path='/signin' exact component={Signin} />
         <Route path='/user' exact component={User} />
         <Route path='/withdraw' exact component={Withdraw} />
+        <Route path='/dashboard' exact component={Dashboard} />
       </div>
     </Router>
   );

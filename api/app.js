@@ -19,8 +19,12 @@ io.on('connection', (socket) => {
   //console.log('a user connected');
   onlineUsers = onlineUsers+1
   console.log(onlineUsers, 'online')
+  io.emit('online users', { numberOfOnlineUsers: onlineUsers})
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    onlineUsers = onlineUsers-1
+    //console.log('user disconnected');    
+    console.log(onlineUsers, 'online')
+    io.emit('online users', { numberOfOnlineUsers: onlineUsers})
   });
 });
 
