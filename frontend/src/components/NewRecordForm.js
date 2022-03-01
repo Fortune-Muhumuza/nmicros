@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from '../Firestore';
 import axios from 'axios'
 import { faker } from '@faker-js/faker';
@@ -42,16 +42,21 @@ function NewRecordForm(props) {
         };
 
         try {
-           // const docRef = await addDoc(collection(db, "users"), enteredData);
+            // const docRef = await addDoc(collection(db, "users"), enteredData);
+
+
+
+
             const docRef = await addDoc(collection(db, "/transactions/deposits/deposits"), enteredData);
-            
+
+
 
             console.log("Document saved to transactions: ", docRef.id);
         } catch (e) {
             console.error("Error adding document: ", e);
         }
 
-       
+
 
         //window.location = '/'
 
@@ -75,7 +80,7 @@ function NewRecordForm(props) {
         querySnapshot.forEach((doc) => {
             const data = doc.data()
             //console.log(JSON.stringify(data))
-            console.log('groups are',data)
+            console.log('groups are', data)
 
             setGroup((prevState) => {
                 return [...prevState, data];
@@ -95,6 +100,30 @@ function NewRecordForm(props) {
     useEffect(() => {
         getData()
     }, [])
+
+
+    const querry = async() => {
+        const Ref = collection(db, "users");
+
+        // Create a query against the collection.
+        const q = query(Ref, where("accountName", "==", "Mrs. Dan Wunsch"));
+    
+        const querySnapshot = await getDocs(q);
+
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log('account is', doc.data())
+            //console.log(doc.id, " => ", doc.data());
+          });
+
+       
+    }
+
+    useEffect(() => {
+        querry()
+    }, [])
+
+ 
 
 
     return (
