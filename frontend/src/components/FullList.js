@@ -7,8 +7,9 @@ import './FullList.css'
 import Button from '@mui/material/Button';
 import { useSelector, useDispatch } from 'react-redux'
 import { setUsers } from '../store/reducers/usersSlice';
+import { io } from "socket.io-client";
 
-
+const socket = io.connect('http://localhost:4000')
 
 export default function FullList() {
 
@@ -16,8 +17,15 @@ export default function FullList() {
     const loadingStatus = useSelector(state => state.users.status)
     const records = useSelector(state => state.users.records)
 
+    
+    const connectSocket = () => {
+        socket.emit('message', {message: 'user connected'})
+    }
 
 
+    useEffect(() => {
+      connectSocket()
+    }, [])
 
 
     useEffect(() => {
